@@ -1,0 +1,427 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "3.3",
+    "title": "API de remontée d'information",
+    "description": "Redmine expose quelqu'unes de ses API en mode REST. Cette page permet de spécifier le \nformat d'entrée, la définition et la réponse à ces API pour le projet PIC'EAU.\n"
+  },
+  "host": "forge-scientifique.brgm-rec.fr",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/xml"
+  ],
+  "produces": [
+    "application/json",
+    "application/xml"
+  ],
+  "x-a127-config": {},
+  "x-a127-services": {},
+  "externalDocs": {
+    "description": "Référence aux APIs Redmine Rest",
+    "url": "http://www.redmine.org/projects/redmine/wiki/Rest_api"
+  },
+  "tags": [
+    {
+      "name": "Issues",
+      "description": "Status : Recette, Note : , Disponible en version : 1.0"
+    }
+  ],
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-Redmine-API-Key"
+    }
+  },
+  "security": [
+    {
+      "api_key": []
+    }
+  ],
+  "paths": {
+    "/issues.{format}": {
+      "x-swagger-router-controller": "getIssues",
+      "x-a127-apply": {},
+      "parameters": [
+        {
+          "$ref": "#/parameters/format"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Issues"
+        ],
+        "summary": "Lister les remontées",
+        "description": "Returns a paginated list of issues. By default, it returns open issues only.  \nNB: operators containing \">\", \"<\" or \"=\" should be hex-encoded so they're parsed correctly. Most evolved API clients will do that for you by default, but for the sake of clarity the following examples have been written with no such magic feature in mind.\n",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "skip this number of issues in response (optional)  \n",
+            "type": "integer",
+            "allowEmptyValue": true
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "number of issues per page (optional)",
+            "type": "integer"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "column to sort with. Append :desc to invert the order.",
+            "type": "string",
+            "collectionFormat": "csv"
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "description": "get issues from the project with the given id (a numeric value, not a project identifier).",
+            "type": "integer"
+          },
+          {
+            "name": "subproject_id",
+            "in": "query",
+            "description": "get issues from the subproject with the given id. You can use project_id=XXX&subproject_id=!* to get only the issues of a given project and none of its subprojects.",
+            "type": "string"
+          },
+          {
+            "name": "tracker_id",
+            "in": "query",
+            "description": "get issues from the tracker with the given id",
+            "type": "integer"
+          },
+          {
+            "name": "status_id",
+            "in": "query",
+            "description": "get issues with the given status id only. Possible values: open, closed, * to get open and closed issues, status id",
+            "type": "string"
+          },
+          {
+            "name": "assigned_to_id",
+            "in": "query",
+            "description": "get issues which are assigned to the given user id. me can be used instead an ID to fetch all issues from the logged in user (via API key or HTTP auth)",
+            "type": "string"
+          },
+          {
+            "name": "cf_x",
+            "in": "query",
+            "description": "get issues with the given value for custom field with an ID of x. (Custom field must have 'used as a filter' checked.)",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success\n",
+            "schema": {
+              "type": "object",
+              "required": [
+                "issues",
+                "total_count",
+                "offset",
+                "limit"
+              ],
+              "properties": {
+                "issues": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Issue"
+                  }
+                },
+                "total_count": {
+                  "type": "integer"
+                },
+                "offset": {
+                  "type": "integer"
+                },
+                "limit": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Issues"
+        ],
+        "summary": "Créer une remontée",
+        "description": "Permet de créer une remontée\n",
+        "externalDocs": {
+          "description": "lien à rajouter vers la forge qui décrit le projet",
+          "url": "https://forge.brgm.fr/projects/pic-eau/"
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "BodyXml",
+            "description": "bodyXmldescription\n\n<?xml version=\"1.0\"?>\n  <issue>\n    <project_id>forge-pic-eau</project_id>\n    <tracker_id>3</tracker_id>\n    <subject>Test_Deuxieme_Remontee_Assistance</subject>\n    <description>Ceci est une remontée créé via l'API par le user UserPiceau en API REST sans la Key en parametre</description>\n    <custom_fields type=\"array\">\n         <custom_field name=\"Thématique\" id=\"14\"><value>23</value></custom_field>\n         <custom_field name=\"Région\"     id=\"18\"><value>3</value></custom_field>\n    </custom_fields>\n  </issue>\n",
+            "schema": {
+              "title": "schematitle",
+              "description": "\nschemadescription\n\n|aa|bb|\n|--|--|\n|aa|bb|\n",
+              "externalDocs": {
+                "description": "aaaa",
+                "url": "http://www.google.com"
+              },
+              "type": "object",
+              "required": [
+                "issue"
+              ],
+              "properties": {
+                "issue": {
+                  "title": "titleissue",
+                  "description": "\nissuedescription\n\n|aa|bb|cc|\n|--|--|--|\n|aa|bb|cc|\n",
+                  "externalDocs": {
+                    "description": "issueextention",
+                    "url": "http://www.google.com"
+                  },
+                  "type": "object",
+                  "required": [
+                    "project_id",
+                    "tracker_id",
+                    "status_id"
+                  ],
+                  "properties": {
+                    "project_id": {
+                      "type": "integer",
+                      "default": 2
+                    },
+                    "tracker_id": {
+                      "type": "integer"
+                    },
+                    "status_id": {
+                      "type": "string"
+                    },
+                    "priority_id": {
+                      "type": "integer"
+                    },
+                    "subject": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "category_id": {
+                      "type": "integer"
+                    },
+                    "fixed_version_id": {
+                      "type": "string",
+                      "description": "'ID of the Target Versions (previously called 'Fixed Version' and still referred to as such in the API)'\n"
+                    },
+                    "assigned_to_id": {
+                      "type": "string",
+                      "description": "'ID of the user to assign the issue to (currently no mechanism to assign by name)'\n"
+                    },
+                    "parent_issue_id": {
+                      "type": "string",
+                      "description": "'ID of the parent issue'\n"
+                    },
+                    "custom_fields": {
+                      "type": "string",
+                      "description": "'See Custom fields'\n"
+                    },
+                    "watcher_user_ids": {
+                      "type": "string",
+                      "description": "'Array of user ids to add as watchers (since 2.3.0)'\n"
+                    },
+                    "is_private": {
+                      "type": "boolean",
+                      "enum": [
+                        false,
+                        true
+                      ],
+                      "description": "'Use true or false to indicate whether the issue is private or not'\n"
+                    },
+                    "estimated_hours": {
+                      "type": "string",
+                      "description": "'Number of hours estimated for issue'\n"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/issues/{issue_id}.{format}": {
+      "parameters": [
+        {
+          "$ref": "#/parameters/issue_id"
+        },
+        {
+          "$ref": "#/parameters/format"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Issues"
+        ],
+        "summary": "Récupérer une remontée",
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "issue"
+              ],
+              "properties": {
+                "issue": {
+                  "$ref": "#/definitions/Issue"
+                }
+              }
+            },
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Issues"
+        ],
+        "summary": "Mettre à jour une remontée",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Issues"
+        ],
+        "summary": "Supprimer une remontée",
+        "responses": {
+          "200": {
+            "headers": {
+              "X-dummy": {
+                "type": "string"
+              }
+            },
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "format": {
+      "name": "format",
+      "in": "path",
+      "description": "json or xml",
+      "type": "string",
+      "required": true,
+      "default": "json",
+      "enum": [
+        "json",
+        "xml"
+      ]
+    },
+    "issue_id": {
+      "name": "issue_id",
+      "in": "path",
+      "description": "The user identifier number",
+      "type": "number",
+      "required": true
+    },
+    "user_id": {
+      "name": "user_id",
+      "in": "path",
+      "description": "The user identifier number",
+      "type": "number",
+      "required": true
+    },
+    "project_id": {
+      "name": "project_id",
+      "in": "path",
+      "description": "The user identifier number",
+      "type": "string",
+      "required": true
+    }
+  },
+  "definitions": {
+    "Issue": {
+      "type": "object",
+      "required": [
+        "id",
+        "project",
+        "tracker",
+        "status",
+        "priority",
+        "author",
+        "subject",
+        "description",
+        "start_date",
+        "done_ratio",
+        "created_on",
+        "updated_on"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "project": {
+          "$ref": "#/definitions/IdName"
+        },
+        "tracker": {
+          "$ref": "#/definitions/IdName"
+        },
+        "status": {
+          "$ref": "#/definitions/IdName"
+        },
+        "priority": {
+          "$ref": "#/definitions/IdName"
+        },
+        "author": {
+          "$ref": "#/definitions/IdName"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string"
+        },
+        "done_ratio": {
+          "type": "string"
+        },
+        "created_on": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_on": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "IdName": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
