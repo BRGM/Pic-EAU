@@ -1,0 +1,11 @@
+[general]
+name=Pic'eau
+email=brgm@brgm.fr 
+author=BRGM
+qgisMinimumVersion=3.0
+description=Permet de voir les points d'eau ayant des mesures de charges hydraulique (niveaux piézométriques) et les visualiser, et de voir si des tickets sont associés.
+about=Nothing to display
+version=version 0.1
+tracker=http://rien.rien
+repository=http://www.rien.rien
+icon=img/logohubeau.svg
