@@ -1,0 +1,10 @@
+Execution test PICEAU - stat descriptives 2018-10-10 17:04:31
+Paramètres :
+  code_bss = 08023X0044/P,07783X0002/F1
+ date début = 01/01/1990
+ date fin = 01/01/1990
+------------------------------------
+Appel API OK
+Nombre de résultat = 398
+Exécution terminée
+Temps d'exécution : 0.13127732276916504 secondes
